@@ -26,14 +26,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var answerFourButton: UIButton!
     @IBOutlet weak var nextQuestionButton: UIButton!
     @IBAction func answerOneButtonPressed(sender: UIButton) {
+        answerCosmetics(checkAnswer(questionCorrectAnswer, answerNumber: 1), answerNumber: answerOneButton)
     }
     @IBAction func answerTwoButtonPressed(sender: UIButton) {
+        answerCosmetics(checkAnswer(questionCorrectAnswer, answerNumber: 2), answerNumber: answerTwoButton)
     }
     @IBAction func answerThreeButtonPressed(sender: UIButton) {
+        answerCosmetics(checkAnswer(questionCorrectAnswer, answerNumber: 3), answerNumber: answerThreeButton)
     }
     @IBAction func answerFourButtonPressed(sender: UIButton) {
+        answerCosmetics(checkAnswer(questionCorrectAnswer, answerNumber: 4), answerNumber: answerFourButton)
     }
     @IBAction func nextQuestionButtonPressed(sender: UIButton) {
+        nextQuestion()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,12 +80,14 @@ class ViewController: UIViewController {
     
     func initialState(){
         
-        var firstQuestion = arrayOfQuestions[0]
+        
         
         numberOfLives = 3
         numberOfPoints = 0
         currentQuestion = 0
         questionCorrectAnswer = 1
+        
+        var firstQuestion = arrayOfQuestions[0] as NSArray
         
         currentNumberOfLivesLabel.text = "\(numberOfLives)"
         currentNumberOfPointsLabel.text = "\(numberOfPoints)"
@@ -92,6 +99,58 @@ class ViewController: UIViewController {
         answerFourButton.setTitle("\(firstQuestion[4])", forState: UIControlState.Normal)
         
         nextQuestionButton.hidden = true
+    }
+    
+    func checkAnswer(correctAnswerIndex: Int, answerNumber:Int) -> Bool {
+        
+        //Hide the all the buttons (the correct one will be un-hid later on)
+        answerOneButton.hidden = true
+        answerTwoButton.hidden = true
+        answerThreeButton.hidden = true
+        answerFourButton.hidden = true
+        
+        //Un-hide the next question button
+        nextQuestionButton.hidden = false
+        
+        //Checking to see if the answer is right
+        if correctAnswerIndex == answerNumber {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func answerCosmetics(isItRight: Bool, answerNumber: UIButton) {
+        
+        if isItRight == true {
+            answerNumber.hidden = false
+            answerNumber.setTitle("Correct!", forState: UIControlState.Normal)
+        } else {
+            answerNumber.hidden = false
+            answerNumber.setTitle("Wrong :(", forState: UIControlState.Normal)
+        }
+    }
+    
+    func nextQuestion(){
+        currentQuestion += 1
+        
+        var newQuestion = arrayOfQuestions[currentQuestion] as NSArray
+        questionCorrectAnswer = newQuestion[5].integerValue
+        
+        answerOneButton.hidden = false
+        answerTwoButton.hidden = false
+        answerThreeButton.hidden = false
+        answerFourButton.hidden = false
+        
+        answerOneButton.setTitle("\(newQuestion[1])", forState: UIControlState.Normal)
+        answerTwoButton.setTitle("\(newQuestion[2])", forState: UIControlState.Normal)
+        answerThreeButton.setTitle("\(newQuestion[3])", forState: UIControlState.Normal)
+        answerFourButton.setTitle("\(newQuestion[4])", forState: UIControlState.Normal)
+        
+        questionLabel.text = "\(newQuestion[0])"
+        
+        nextQuestionButton.hidden = true
+        
     }
   
 }
